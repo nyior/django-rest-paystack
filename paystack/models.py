@@ -18,6 +18,7 @@ class BasePaymentHistory(models.Model):
 
     GATEWAY_PURCHASE = "GATEWAY_PURCHASE"
     CASH_REVERSAL = "CASH_REVERSAL"
+    TRANSFER = "TRANSFER"
 
     uuid = models.UUIDField(unique=True, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -26,14 +27,13 @@ class BasePaymentHistory(models.Model):
         choices=(
             (GATEWAY_PURCHASE, "Gateway Order Purchase"),
             (CASH_REVERSAL, "Cash Reversal"),
+            (TRANSFER, "Transfer"),
         ),
     )
     amount = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN")
 
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name="purchase_transactions",
-    )
+    txRef = models.CharField(max_length=100, null=True, blank=True)
+    transaction_id = models.CharField(max_length=100, null=True, blank=True)
+
+    payment_date_time = models.DateTimeField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=50, null=True, blank=True)

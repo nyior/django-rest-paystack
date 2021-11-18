@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
+from paystack.models import BasePaymentHistory
+
 class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = TransactionIntent
+        model = BasePaymentHistory
         fields = '__all__'
-        read_only_fields = ( 'date_created' )
