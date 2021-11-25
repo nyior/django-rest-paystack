@@ -1,7 +1,7 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from paystack.services.base_api_service import BaseAPIService
+from .base_api_service import BaseAPIService
 
 
 class TransactionService(BaseAPIService):

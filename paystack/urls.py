@@ -2,11 +2,11 @@ from django.urls import include, path
 
 from rest_framework import routers
 
-from paystack.views import transaction, transfer
+from paystack.views import TransactionViewSet, TransferViewSet
 
 router = routers.DefaultRouter()
-router.register('transaction', transaction.TransactionService)
-router.register('transfer', transfer.TransferService)
+router.register('transaction', TransactionViewSet)
+router.register('transfer', TransferViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

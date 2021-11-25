@@ -7,8 +7,7 @@ RUN mkdir /code/staticfiles
 
 WORKDIR /code
 
-RUN apt-get update \
-    && apt-get install -y gdal-bin libgdal-dev python3-gdal binutils libproj-dev
+RUN apt-get update 
 
 ADD requirements.txt /code/
 

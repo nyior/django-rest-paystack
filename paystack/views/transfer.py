@@ -5,7 +5,7 @@ from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from paystack.models import BasePaymentHistory
-from paystack.services.transfer_service import TransferService
+from paystack.services import TransferService
 
 from django_rest_paystack.utils import return_okay_response
 

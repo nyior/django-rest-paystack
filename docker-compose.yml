@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+
+  # db:
+  #   image: kartoza/postgis
+  #   environment:
+  #     - POSTGRES_DBNAME=paystack
+  #     - POSTGRES_USER=paystack
+  #     - POSTGRES_PASS=paystack
+  #     - POSTGRES_PORT=5432
+  #   volumes:
+  #     - postgis-data:/var/lib/postgresql/data/
+  #   ports:
+  #     - "5432:5432"
   
   web:
     build: .
@@ -10,6 +22,6 @@ services:
       - .:/code
     ports:
       - 8000:8000
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
   

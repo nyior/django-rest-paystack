@@ -5,7 +5,7 @@ from django.conf import settings
 from rest_framework.exceptions import ValidationError, NotAcceptable
 from rest_framework.response import Response
 
-from paystack.services.base_api_service import BaseAPIService
+from base_api_service import BaseAPIService
 
 
 class TransferService(BaseAPIService):

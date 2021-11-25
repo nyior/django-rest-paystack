@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from paystack.models import BasePaymentHistory
 from paystack.serializers import PaymentSerializer
-from paystack.services.transaction_service import TransactionService
+from paystack.services import TransactionService
 
 from django_rest_paystack.utils import return_okay_response
 
@@ -16,6 +16,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
     http_method_names = ['get', 'post']
     permission_classes [IsAuthenticated]
+    lookup_field = 'uuid'
     
     @action(detail=False, methods=['post'], name='initialize payment')
     def initialize(self, request):
