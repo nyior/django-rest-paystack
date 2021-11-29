@@ -1,6 +1,7 @@
 import hashlib
 import hmac
 import os
+from rest_framework import status
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -55,18 +56,18 @@ class TransactionService(BaseAPIService):
         else:
             raise ValidationError("payment for this transaction could not be processed")
 
-    # def transactions(self, start_date=None, end_date=None, status=None, pagination=10):
-    #     path = "/transaction/?perPage={}".format(pagination)
-    #     path = path + "&status={}".format(status) if status else path
-    #     path = path + "&from={}".format(start_date) if start_date else path
-    #     path = path + "&to={}".format(end_date) if end_date else path
+    def transactions(self, **kwargs):
+        status = kwargs.get('status')
+        start_date = kwargs.get('start_date')
+        end_date = kwargs.get('end_date')
 
-    #     return self.make_request("GET", path)
+        path = "/transaction/?perPage={}".format(kwargs.get('pagination'))
+        path = path + "&status={}".format(status) if status else path
+        path = path + "&from={}".format(start_date) if start_date else path
+        path = path + "&to={}".format(end_date) if end_date else path
 
-    # def transaction(self, transaction_id):
-    #     path = "transaction/{}/".format(transaction_id)
-    #     return self.make_request("GET", path)
+        return self.make_request("GET", path)
 
-    # def totals(self):
-    #     path = "/transaction/totals/"
-    #     return self.make_request("GET", path)
+    def transaction(self, transaction_id):
+        path = "transaction/{}/".format(transaction_id)
+        return self.make_request("GET", path)
