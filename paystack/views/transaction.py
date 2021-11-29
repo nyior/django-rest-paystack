@@ -31,7 +31,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         transaction_service = TransactionService(request)
         initiated_transaction = transaction_service.initialize_payment(payload)
        
-        return_okay_response(initiated_transaction, status.HTTP_200_OK)
+        return_okay_response(initiated_transaction)
 
     @action(detail=False, methods=['get'], name='verify payment')
     def verify_payment(self, request):
@@ -40,4 +40,15 @@ class TransactionViewSet(viewsets.ModelViewSet):
         paystack_service = TransactionService(request)
         verified_transaction = paystack_service.verify_payment(transaction_ref)
        
-        return_okay_response(verified_transaction, status=status.HTTP_200_OK)
+        return_okay_response(verified_transaction)
+
+    # @action(detail=False, methods=['get'], name='verify payment')
+    # def transactions(self, request):
+    #     transaction_ref  = request.kwargs['transaction_ref']
+
+    #     paystack_service = TransactionService(request)
+    #     verified_transaction = paystack_service.verify_payment(transaction_ref)
+       
+    #     return_okay_response(verified_transaction)
+
+    

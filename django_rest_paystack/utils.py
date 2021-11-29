@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-def return_okay_response(data, status):
+def return_okay_response(data=None, status=status.HTTP_200_OK):
     response = {"status": "success", "result": data}
     return Response(response, status=status)
 
