@@ -42,28 +42,4 @@ class TransactionViewSet(viewsets.ModelViewSet):
        
         return_okay_response(verified_transaction)
 
-    @action(detail=False, methods=['get'], name='all transactions')
-    def transactions(self, request):
-        data = {
-            'pagination' : request.GET.get('pagination', 10),
-            'start_date' : request.GET.get('start_date', None),
-            'end_date' : request.GET.get('end_date', None),
-            'status' : request.GET.get('status', None),
-        }
-
-        paystack_service = TransactionService(request)
-        all_transactions = paystack_service.transactions(**data)
-       
-        return_okay_response(all_transactions)
-
-    @action(detail=False, methods=['get'], name='single transaction')
-    def transaction(self, request):
-        transaction_id = request.kwargs['transaction_id']
-
-        paystack_service = TransactionService(request)
-        transaction = paystack_service.transaction(transaction_id)
-       
-        return_okay_response(transaction)
-
-
     
