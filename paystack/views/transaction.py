@@ -1,12 +1,10 @@
-from django.conf import settings
-
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from paystack.models import BasePaymentHistory
 from paystack.serializers import PaymentSerializer
-from paystack.services import TransactionService, transaction_service
+from paystack.services import TransactionService
 
 from django_rest_paystack.utils import return_okay_response
 
@@ -26,6 +24,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
         payload  = {
             "email": user_email if user_email else None,
             "amount": amount if amount else None,
+            "metadata": {
+                "user": request.user
+            }
         }
 
         transaction_service = TransactionService(request)
@@ -34,7 +35,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         return_okay_response(initiated_transaction)
 
     @action(detail=False, methods=['get'], name='verify payment')
-    def verify_payment(self, request):
+    def verify_transaction(self, request):
         transaction_ref  = request.kwargs['transaction_ref']
 
         paystack_service = TransactionService(request)

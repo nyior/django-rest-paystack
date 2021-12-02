@@ -3,11 +3,11 @@ from rest_framework.decorators import action
 from paystack.services import webhookService
 
 from django_rest_paystack.utils import return_okay_response
-from paystack.services.webhook import WebhookService
+from paystack.services import WebhookService
 
 
 class WebhookView(viewsets.ModelViewSet):
-    http_method_names = ['get']
+    http_method_names = ['post']
     
     @action(detail=False, methods=["post"])
     def webhook_handler(self, request):

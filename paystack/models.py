@@ -1,17 +1,27 @@
 import uuid
 
-from djmoney.models.fields import MoneyField
 from django.contrib.auth import get_user_model, models
 
 User = get_user_model()
 
 
 class PayStackCustomer(models.Model):
+    """ 
+        for charging a customer's card again using authorization code
+        for transfers too
+    """
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    metadata = models.JSONField(blank=True, null=True)
+
+    # authorization creds for recurring charges
     email = models.CharField(blank=True, null=True, max_length=100)
     authorization_code = models.CharField(blank=True, null=True, max_length=100)
-    recipient_code = models.CharField(blank=True, null=True, max_length=100)
+    card_type = models.CharField(blank=True, null=True, max_length=10)
+    last4 = models.CharField(blank=True, null=True, max_length=4)
+    exp_month = models.CharField(blank=True, null=True, max_length=10)
+    exp_year = models.CharField(blank=True, null=True, max_length=10)
+    bin = models.CharField(blank=True, null=True, max_length=10)
+    bank = models.CharField(blank=True, null=True, max_length=100)
+    account_name = models.CharField(blank=True, null=True, max_length=100)
 
 
 class BasePaymentHistory(models.Model):
