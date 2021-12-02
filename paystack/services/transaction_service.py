@@ -56,18 +56,3 @@ class TransactionService(BaseAPIService):
         else:
             raise ValidationError("payment for this transaction could not be processed")
 
-    def transactions(self, **kwargs):
-        status = kwargs.get('status')
-        start_date = kwargs.get('start_date')
-        end_date = kwargs.get('end_date')
-
-        path = "/transaction/?perPage={}".format(kwargs.get('pagination'))
-        path = path + "&status={}".format(status) if status else path
-        path = path + "&from={}".format(start_date) if start_date else path
-        path = path + "&to={}".format(end_date) if end_date else path
-
-        return self.make_request("GET", path)
-
-    def transaction(self, transaction_id):
-        path = "transaction/{}/".format(transaction_id)
-        return self.make_request("GET", path)
