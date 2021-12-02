@@ -42,4 +42,21 @@ class TransactionViewSet(viewsets.ModelViewSet):
        
         return_okay_response(verified_transaction)
 
+    @action(detail=False, methods=['post'], name='recurrent_charge')
+    def recurrent_charge(self, request):
+        user_email = request.user.email
+        amount  = request.data['amount'] * 100 # price in kobo
+        auth_code = request.data['auth_code']
+        
+        payload  = {
+            "email": user_email if user_email else None,
+            "amount": amount if amount else None,
+            "auth_code": auth_code if auth_code else None,
+        }
+
+        transaction_service = TransactionService(request)
+        charge = transaction_service.recurrent_charge(payload)
+       
+        return_okay_response(charge)
+
     

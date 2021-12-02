@@ -30,9 +30,21 @@ class TransactionService(BaseAPIService):
     def log_transaction(self, transaction_data): # transaction will be logged in the webhook
         self._create_transaction_object(transaction_data)
 
-    def _validate_payload(self, payload: dict) -> None:
-        """ check that payload has all the required params"""
+    def _validate_initiate_payload(self, payload: dict) -> None:
+        """ 
+            check that payload has all the required params
+        """
         required = ["email", "amount"]
+
+        for i in required:
+            if not payload[i]:
+                raise ValidationError(f"{i} must be provided")
+
+    def _validate_charge_payload(self, payload: dict) -> None:
+        """ 
+            check that payload has all the required params
+        """
+        required = ["email", "amount", "auth_code"]
 
         for i in required:
             if not payload[i]:
@@ -41,7 +53,7 @@ class TransactionService(BaseAPIService):
     def initialize_payment(self, payload: dict) -> Response:
         path = "/initialize"
 
-        self._validate_payload(payload)
+        self._validate_initiate_payload(payload)
         response = self.make_request("POST", path, payload)
 
         return response
@@ -56,3 +68,9 @@ class TransactionService(BaseAPIService):
         else:
             raise ValidationError("payment for this transaction could not be processed")
 
+    def recurrent_charge(self, payload: dict) -> Response:
+        self._validate_charge_payload(payload)
+       
+        path = "/transaction/charge_authorization"
+        
+        return self.make_request('POST', path, payload)
