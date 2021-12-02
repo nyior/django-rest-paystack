@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from paystack.services import WebhookService
 from django_rest_paystack.utils import return_okay_response
 
+
 @csrf_exempt
 @api_view()
 def webhook_handler(request):

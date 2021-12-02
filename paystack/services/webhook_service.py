@@ -4,6 +4,7 @@ import os
 
 from rest_framework.exceptions import ValidationError
 from .transaction_service import TransactionService
+from .customer_service import CustomerService
 
 class WebhookService(object):
 
@@ -22,8 +23,7 @@ class WebhookService(object):
             paystack_service = TransactionService(self.request)
             paystack_service.log_transaction(webhook_data["data"])
 
-        if (webhook_data["event"] == "transfer.success"):
-            # it's a transfer log it here
-            pass
-        
+            customer_service = CustomerService(self.request)
+            customer_service.log_customer(webhook_data["data"])
+    
         return webhook_data

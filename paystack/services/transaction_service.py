@@ -1,6 +1,3 @@
-import hashlib
-import hmac
-import os
 from rest_framework import status
 
 from rest_framework.exceptions import ValidationError
@@ -17,8 +14,10 @@ class TransactionService(BaseAPIService):
         self.user = request.user
 
     def _create_transaction_object(self, transaction_data):
+        user = transaction_data["metadata"]["user"]
+
         BasePaymentHistory.objects.create(
-            user=self.user, # User will be anonymous since it's coming from Paystack
+            user=user,
             charge_type="GATEWAY PURCHASE",
             amount=transaction_data["amount"],
             currency=transaction_data["currency"],
