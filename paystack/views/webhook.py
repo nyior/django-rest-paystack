@@ -1,16 +1,13 @@
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from paystack.services import webhookService
+from django.views.decorators.csrf import csrf_exempt
 
+from rest_framework.decorators import api_view
+
+from paystack.services import WebhookService
 from django_rest_paystack.utils import return_okay_response
-from paystack.services.webhook import WebhookService
 
-
-class WebhookView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    
-    @action(detail=False, methods=["post"])
-    def webhook_handler(self, request):
+@csrf_exempt
+@api_view()
+def webhook_handler(request):
         webhook_service = WebhookService(request)
         webhook_service.webhook_handler()
 
