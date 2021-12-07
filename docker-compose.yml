@@ -1,27 +1,13 @@
 version: '3'
 
 services:
-
-  # db:
-  #   image: kartoza/postgis
-  #   environment:
-  #     - POSTGRES_DBNAME=paystack
-  #     - POSTGRES_USER=paystack
-  #     - POSTGRES_PASS=paystack
-  #     - POSTGRES_PORT=5432
-  #   volumes:
-  #     - postgis-data:/var/lib/postgresql/data/
-  #   ports:
-  #     - "5432:5432"
   
   web:
     build: .
     container_name: django_rest_paystack
-    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py makemigrations; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:
       - 8000:8000
-    # depends_on:
-    #   - db
-  
+    

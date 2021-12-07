@@ -1,6 +1,7 @@
 import uuid
 
-from django.contrib.auth import get_user_model, models
+from django.db import models
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -39,7 +40,7 @@ class BasePaymentHistory(models.Model):
         ),
     )
     amount = models.FloatField(max_length=19)
-    currency = models.Charfield(max_length=5)
+    currency = models.CharField(max_length=5)
     txRef = models.CharField(max_length=100, null=True, blank=True)
 
     payment_date_time = models.DateTimeField(max_length=100, null=True, blank=True)

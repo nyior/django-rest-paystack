@@ -13,10 +13,10 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = BasePaymentHistory.objects.all()
     serializer_class = PaymentSerializer
     http_method_names = ['get', 'post']
-    permission_classes [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'uuid'
     
-    @action(detail=False, methods=['post'], name='initialize payment')
+    @action(detail=False, methods=['post'], name='initiate-transaction')
     def initialize(self, request):
         user_email = request.user.email
         amount  = request.data['amount'] * 100 # price in kobo
@@ -34,16 +34,16 @@ class TransactionViewSet(viewsets.ModelViewSet):
        
         return_okay_response(initiated_transaction)
 
-    @action(detail=False, methods=['get'], name='verify payment')
+    @action(detail=False, methods=['get'], name='verify-transactin')
     def verify_transaction(self, request):
-        transaction_ref  = request.kwargs['transaction_ref']
+        transaction_ref  = request.GET.get['transaction_ref']
 
         paystack_service = TransactionService(request)
         verified_transaction = paystack_service.verify_payment(transaction_ref)
        
         return_okay_response(verified_transaction)
 
-    @action(detail=False, methods=['post'], name='recurrent_charge')
+    @action(detail=False, methods=['post'], name='charge-customer')
     def recurrent_charge(self, request):
         user_email = request.user.email
         amount  = request.data['amount'] * 100 # price in kobo
