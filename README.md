@@ -3,31 +3,41 @@
 </h1>
 
 <p align="center">
-	<i>
+	<small>
         Focus on your business logic. Leave all the mundane payment serere to us.
         Our package will do all the heavy lifting for you :D
-    </i>
+    </small>
 </p>
 
 
 ## what is django-rest-paystack?
-some write up here
 
-#### overview
-some write up here...
+### overview
+Creating those payment endpoints for every single e-commerce project we work on could become
+brutally redundant and perharps somewhat boring overtime. While there are different approaches to integrating and processing payments with a gateway like Paystack(more on this later), in each approach, the flow doesn't really change. If it doesn't change then why repeat yourself? 
 
-#### Features
-    - feature 1
-    - feature 2
+    DRY: Enter django-rest-paystack.
+        when installed and configured, this package generates all the endpoints you'd need to start and
+        complete a transaction. 
+
+### Features
+* initialize a transaction
+* verify a transaction: 
+* Get user authorization code
+* charge an authorization
+* handle webhooks
+* th package also logs some relevant data to the db(e.g transaction log, authorization code)
+
+If you're not very familiar with how some of those endpoints work, don't worry, I will get to that in a bit.
 
 
 ## How do I use this package in my project?
 
-#### Quick Setup
+### Quick Setup
 
 Install package
 
-    pip install dj-rest-auth
+    pip install paystack
     
 Add `paystack` app to INSTALLED_APPS in your django settings.py:
 
@@ -59,7 +69,7 @@ PAYSTACK_PRIVATE_KEY=11d54fbd95a0100000000000000
 
 ```
 
-#### Paying for an order
+### Paying for an order
 If you like this repo, click the :star:
 
 
@@ -78,7 +88,10 @@ You're welcome. If you like this repo, click the :star: I'd appreciate that.
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Acknowledgements
-
+In building this, I found the following repositories really helpful
+* [laravel-paystack](https://github.com/unicodeveloper/laravel-paystack)
+* [popoola/pypaystack](https://github.com/edwardpopoola/pypaystack)
+* [gbozee/pypaystack](https://github.com/gbozee/pypaystack)
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+This project is released under the [MIT](https://choosealicense.com/licenses/mit/) License
