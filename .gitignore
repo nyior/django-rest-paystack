@@ -17,3 +17,6 @@ venv.bak/
 
 # Backup files # 
 *.bak 
+
+# Pytest
+.pytest_cache

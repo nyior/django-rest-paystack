@@ -1,16 +1,17 @@
 import uuid
 
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 
 User = get_user_model()
 
 
 class PayStackCustomer(models.Model):
-    """ 
-        for charging a customer's card again using authorization code
-        for transfers too
     """
+    for charging a customer's card again using authorization code
+    for transfers too
+    """
+
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     # authorization creds for recurring charges

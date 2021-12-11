@@ -4,7 +4,6 @@ from paystack.models import PayStackCustomer
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = PayStackCustomer
-        fields = '__all__'
+        fields = "__all__"

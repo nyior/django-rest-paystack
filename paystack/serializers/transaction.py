@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 from paystack.models import TransactionLog
 
-class PaymentSerializer(serializers.ModelSerializer):
 
+class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionLog
-        fields = '__all__'
+        fields = "__all__"
