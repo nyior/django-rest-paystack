@@ -27,7 +27,9 @@ class CustomerService(BaseAPIService):
         )
 
     def log_customer(self, webhook_data) -> None:
-        user = webhook_data['metadata']['user']
+        user_id =webhook_data["metadata"]["user_id"]
+        user = self.get_user(user_id)
+        
         customer_data = webhook_data['customer']
         authorization_data = webhook_data['authorization']
         

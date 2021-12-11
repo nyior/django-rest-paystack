@@ -25,7 +25,7 @@ class PayStackCustomer(models.Model):
     account_name = models.CharField(blank=True, null=True, max_length=100)
 
 
-class BasePaymentHistory(models.Model):
+class TransactionLog(models.Model):
 
     GATEWAY_PURCHASE = "GATEWAY_PURCHASE"
     TRANSFER = "TRANSFER"

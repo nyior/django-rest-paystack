@@ -3,17 +3,14 @@ from django.urls import reverse
 
 class URLsMixin(object):
     
-    def __init__(self):
-        pass
-
     def initiate_transaction_url(self):
-        return reverse('initiate-transaction')
+        return reverse('transaction-initiate')
 
     def verify_transaction_url(self, trans_ref):
-        return reverse('verify-transaction')+ f"?transaction_ref={trans_ref}"
+        return reverse('transaction-verify')+ f"?transaction_ref={trans_ref}"
 
     def charge_customer_url(self):
-        return reverse('charge-customer')
+        return reverse('transaction-charge-customer')
 
     def transaction_url(self, transaction_id):
         return reverse('transaction-detail')
@@ -25,8 +22,8 @@ class URLsMixin(object):
         return reverse('webhook-handler')
 
     def get_customer_url(self, user_id):
-        return reverse('paystack-customer-detail')
+        return reverse('customer-detail')
         
     def all_customers_url(self):
-        return reverse('paystack-customer-list')
+        return reverse('customer-list')
         

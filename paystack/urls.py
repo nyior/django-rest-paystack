@@ -5,8 +5,8 @@ from rest_framework import routers
 from paystack.views import TransactionViewSet, PaystackCustomerViewSet, webhook_handler
 
 router = routers.DefaultRouter()
-router.register('transaction', TransactionViewSet)
-router.register('paystack-customer', PaystackCustomerViewSet)
+router.register('transaction', TransactionViewSet, basename='transaction')
+router.register('paystack-customer', PaystackCustomerViewSet, basename='customer')
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -1,11 +1,14 @@
-from rest_framework import status
-
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from .base_api_service import BaseAPIService
-from paystack.models import BasePaymentHistory
-
+from paystack.models import TransactionLog
+from paystack.paystack_urls import (
+    PAYSTACK_CHARGE_AUTHORIZATION_URL,
+    TRANSACTION_URL,
+    PAYSTACK_INITIALIZE_TRANSACTION_URL,
+    PAYSTACK_VERIFY_TRANSACTION_URL
+)
 
 class TransactionService(BaseAPIService):
 
@@ -14,9 +17,10 @@ class TransactionService(BaseAPIService):
         self.user = request.user
 
     def _create_transaction_object(self, transaction_data):
-        user = transaction_data["metadata"]["user"]
+        user_id = transaction_data["metadata"]["user_id"]
+        user = self.get_user(user_id)
 
-        BasePaymentHistory.objects.create(
+        TransactionLog.objects.create(
             user=user,
             charge_type="GATEWAY PURCHASE",
             amount=transaction_data["amount"],
@@ -43,33 +47,28 @@ class TransactionService(BaseAPIService):
         """ 
             check that payload has all the required params
         """
-        required = ["email", "amount", "auth_code"]
+        required = ["email", "amount", "authorization_code"]
 
         for i in required:
-            if not payload[i]:
+            try:
+                payload[i]
+            except KeyError:
                 raise ValidationError(f"{i} must be provided")
 
     def initialize_payment(self, payload: dict) -> Response:
-        path = "/initialize"
+        url = PAYSTACK_INITIALIZE_TRANSACTION_URL
 
         self._validate_initiate_payload(payload)
-        response = self.make_request("POST", path, payload)
-
-        return response
+        return self.make_request("POST", url, payload)
 
     def verify_payment(self, transaction_ref: str) -> Response:
-        path = "/verify/{0}".format(transaction_ref)
+        url = PAYSTACK_VERIFY_TRANSACTION_URL.format(transaction_ref)
         
-        response = self.make_request("GET", path)
-       
-        if response.data["status"] == "success" and response.status_code == 200:
-            return response
-        else:
-            raise ValidationError("payment for this transaction could not be processed")
+        return self.make_request("GET", url)
 
     def recurrent_charge(self, payload: dict) -> Response:
         self._validate_charge_payload(payload)
        
-        path = "/transaction/charge_authorization"
+        url =PAYSTACK_CHARGE_AUTHORIZATION_URL
         
-        return self.make_request('POST', path, payload)
+        return self.make_request('POST', url, payload)

@@ -1,44 +1,58 @@
 import requests, json, os
 
+from django.contrib.auth import get_user_model
 from django.conf import settings
 
-from rest_framework.exceptions import NotAcceptable
-from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
+
+User = get_user_model()
 
 
 class BaseAPIService(object): # Not to be instantiated directly
 
-    def make_request(method, path, payload=None):
-        
-        url = "{}{}".format(settings.PAYSTACK_BASE_URL, path)
+    def get_user(self, user_id):
+        return User.objects.get(id=user_id)
 
+    def make_request(self, method, url, payload=None):
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer { settings.PAYSTACK_PUBLIC_KEY }"
+            "Authorization": f"Bearer {os.environ.get('PAYSTACK_PRIVATE_KEY')}"
         }
 
         response = requests.request(
-            method, url, data=payload, headers=headers
+            method, 
+            url, 
+            data=json.dumps(payload), 
+            headers=headers
         )
 
+        if response.status_code != 200:
+            if response.text:
+                raise ValidationError(
+                    response.text
+                )
+            else:
+                raise ValidationError(
+                    f"paystack failed with error code: {response.status_code}"
+                )  
+                
         data_json_str = json.dumps(json.loads(response.text))
-
         # convert json str to json object
         result = json.loads(data_json_str)
         
         return result
-
-    def validate_amount(amount):
+       
+    def validate_amount(self, amount):
         if not amount:
-            raise NotAcceptable("Amount is required")
+            raise ValidationError("Amount is required")
 
         if isinstance(amount, int) or isinstance(amount, float):
             if amount < 0:
-                raise NotAcceptable("Negative amount is not allowed")
+                raise ValidationError("Negative amount is not allowed")
             return amount
         else:
-            raise NotAcceptable("Amount must be a number")
+            raise ValidationError("Amount must be a number")
 
-    def validate_email(email):
+    def validate_email(self, email):
         if not email:
-            raise NotAcceptable("Customer Email is required")
+            raise ValidationError("Customer Email is required")

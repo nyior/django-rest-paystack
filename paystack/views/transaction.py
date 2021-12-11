@@ -1,63 +1,65 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
-from paystack.models import BasePaymentHistory
+from paystack.models import TransactionLog
 from paystack.serializers import PaymentSerializer
 from paystack.services import TransactionService
 
-from django_rest_paystack.utils import return_okay_response
+from paystack.utils import (
+    return_okay_response, get_authentication_class
+)
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
-    queryset = BasePaymentHistory.objects.all()
+    queryset = TransactionLog.objects.all()
     serializer_class = PaymentSerializer
     http_method_names = ['get', 'post']
-    permission_classes = [IsAuthenticated]
+    authentication_classes = get_authentication_class()
     lookup_field = 'uuid'
     
-    @action(detail=False, methods=['post'], name='initiate-transaction')
-    def initialize(self, request):
-        user_email = request.user.email
-        amount  = request.data['amount'] * 100 # price in kobo
-        
+    @action(detail=False, methods=['post'])
+    def initiate(self, request):
+        user_email = request.data['email']
+        amount  = request.data['amount']
+
         payload  = {
             "email": user_email if user_email else None,
-            "amount": amount if amount else None,
+            "amount": amount * 100 if amount else None, # price in kobo
             "metadata": {
-                "user": request.user
+                "user_id": request.user.id
             }
         }
 
         transaction_service = TransactionService(request)
         initiated_transaction = transaction_service.initialize_payment(payload)
        
-        return_okay_response(initiated_transaction)
+        return return_okay_response(initiated_transaction)
+        
 
-    @action(detail=False, methods=['get'], name='verify-transactin')
-    def verify_transaction(self, request):
-        transaction_ref  = request.GET.get['transaction_ref']
+    @action(detail=False, methods=['get'])
+    def verify(self, request):
+        transaction_ref  = request.query_params.get('transaction_ref')
 
         paystack_service = TransactionService(request)
         verified_transaction = paystack_service.verify_payment(transaction_ref)
        
-        return_okay_response(verified_transaction)
+        return return_okay_response(verified_transaction)
 
-    @action(detail=False, methods=['post'], name='charge-customer')
-    def recurrent_charge(self, request):
-        user_email = request.user.email
-        amount  = request.data['amount'] * 100 # price in kobo
-        auth_code = request.data['auth_code']
+    @action(detail=False, methods=['post'], url_path='charge-customer')
+    def charge_customer(self, request):
+        user_email = request.data['email']
+        amount  = request.data['amount']
+        authorization_code = request.data['authorization_code']
         
         payload  = {
             "email": user_email if user_email else None,
-            "amount": amount if amount else None,
-            "auth_code": auth_code if auth_code else None,
+            "amount": amount * 100 if amount else None,
+            "authorization_code": authorization_code if authorization_code else None,
         }
 
         transaction_service = TransactionService(request)
         charge = transaction_service.recurrent_charge(payload)
        
-        return_okay_response(charge)
+        return return_okay_response(charge)
 
     

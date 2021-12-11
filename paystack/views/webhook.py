@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 
 from paystack.services import WebhookService
-from django_rest_paystack.utils import return_okay_response
+from paystack.utils import return_okay_response
 
 
 @csrf_exempt
