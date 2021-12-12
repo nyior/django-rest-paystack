@@ -20,13 +20,24 @@ brutally redundant and perharps somewhat boring overtime. While there are differ
         when installed and configured, this package generates all the endpoints you'd need to start and
         complete a transaction. 
 
-### Features
-* initialize a transaction
-* verify a transaction: 
-* Get user authorization code
-* charge an authorization
-* handle webhooks
-* th package also logs some relevant data to the db(e.g transaction log, authorization code)
+### Endpoints
+* initialize a transaction: ```POST /api/v1/paystack/transaction/initiate```
+        minimal_payload = {
+            "amount": 0,
+            "email": "string",
+        }
+* verify a transaction:  ```GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"```
+* Get user authorization code: ```GET /api/v1/paystack/paystack-customer/{user__id}/```
+* charge an authorization: ``` POST /api/v1/paystack/transaction/charge-customer```
+        minimal_payload = {
+            "amount": 0,
+            "email": "string",
+            "authorization_code": "string",
+        }
+* handle webhooks: ``` api/v1/paystack/webook-handler```
+* get all transactions: ```/api/v1/paystack/transaction```
+* retrieve a single transaction: ```/api/v1/paystack/transaction/{uuid}```
+* the package also logs some relevant data to the db(e.g transaction log, authorization code)
 
 If you're not very familiar with how some of those endpoints work, don't worry, I will get to that in a bit.
 
