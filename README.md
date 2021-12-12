@@ -149,7 +149,9 @@ class WebhookService(object):
         self.request = request
 
     def webhook_handler(self):
-        secret = os.environ.get("PAYSTACK_SECRET_KEY")
+        secret = getattr(
+            settings, ' PAYSTACK_PRIVATE_KEY', None
+        )
         webhook_data = self.request.data
         hash = hmac.new(secret, webhook_data, digestmod=hashlib.sha512).hexdigest()
 
