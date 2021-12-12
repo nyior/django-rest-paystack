@@ -1,5 +1,4 @@
 import json
-import os
 
 import requests
 from django.conf import settings
@@ -14,9 +13,13 @@ class BaseAPIService(object):  # Not to be instantiated directly
         return User.objects.get(id=user_id)
 
     def make_request(self, method, url, payload=None):
+        PAYSTACK_PRIVATE_KEY = getattr(
+            settings, ' PAYSTACK_PRIVATE_KEY', None
+        )
+
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {os.environ.get('PAYSTACK_PRIVATE_KEY')}",
+            "Authorization": f"Bearer { PAYSTACK_PRIVATE_KEY }",
         }
 
         response = requests.request(

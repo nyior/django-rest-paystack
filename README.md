@@ -3,41 +3,51 @@
 </h1>
 
 <p align="center">
-	<small>
-        Focus on your business logic. Leave all the mundane payment serere to us.
-        Our package will do all the heavy lifting for you :D
-    </small>
+    Focus on your business logic. Leave all the mundane payment _serere_ to us.
+    Our package will do all the heavy lifting for you :D
 </p>
 
 
-## what is django-rest-paystack?
+## What is django-rest-paystack?
 
-### overview
+### Overview
 Creating those payment endpoints for every single e-commerce project we work on could become
-brutally redundant and perharps somewhat boring overtime. While there are different approaches to integrating and processing payments with a gateway like Paystack(more on this later), in each approach, the flow doesn't really change. If it doesn't change then why repeat yourself? 
+redundant and perharps somewhat boring overtime. While there are different approaches to integrating and processing payments with a gateway like Paystack(more on this later), in each approach, the flow doesn't really change. If it doesn't change then why repeat yourself? _you nor need stress  lol_
 
     DRY: Enter django-rest-paystack.
         when installed and configured, this package generates all the endpoints you'd need to start and
         complete a transaction. 
 
 ### Endpoints
-* initialize a transaction: ```POST /api/v1/paystack/transaction/initiate```
+* initialize a transaction: 
+```python
+        POST /api/v1/paystack/transaction/initiate
+
         minimal_payload = {
             "amount": 0,
             "email": "string",
         }
-* verify a transaction:  ```GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"```
-* Get user authorization code: ```GET /api/v1/paystack/paystack-customer/{user__id}/```
-* charge an authorization: ``` POST /api/v1/paystack/transaction/charge-customer```
+```
+* verify a transaction:  `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"`
+
+* Get user authorization code: `GET /api/v1/paystack/paystack-customer/{user__id}/`
+
+* charge an authorization: 
+```python
+        POST /api/v1/paystack/transaction/charge-customer`
         minimal_payload = {
             "amount": 0,
             "email": "string",
             "authorization_code": "string",
         }
-* handle webhooks: ``` api/v1/paystack/webook-handler```
-* get all transactions: ```/api/v1/paystack/transaction```
-* retrieve a single transaction: ```/api/v1/paystack/transaction/{uuid}```
-* the package also logs some relevant data to the db(e.g transaction log, authorization code)
+```
+
+* handle webhooks: ` api/v1/paystack/webook-handler`
+
+* get all transactions: `/api/v1/paystack/transaction`
+
+* retrieve a single transaction: `/api/v1/paystack/transaction/{uuid}`
+* This package also logs some relevant data like the authorization_code in the db.
 
 If you're not very familiar with how some of those endpoints work, don't worry, I will get to that in a bit.
 
@@ -48,9 +58,9 @@ If you're not very familiar with how some of those endpoints work, don't worry, 
 
 Install package
 
-    pip install paystack
+    pip install django-rest-paystack
     
-Add `paystack` app to INSTALLED_APPS in your django settings.py:
+Add `paystack` app to INSTALLED_APPS in your django `settings.py`:
 
 ```python
 INSTALLED_APPS = (
@@ -61,7 +71,17 @@ INSTALLED_APPS = (
     'paystack'
 )
 ```
-    
+
+Load paystack credentials in your django `settings.py`:
+
+```python
+# Ideally, these values should be stored as environment variables, and loaded like so:
+
+PAYSTACK_PUBLIC_KEY=os.environ.get('name-of-var')
+PAYSTACK_PRIVATE_KEY=os.environ.get('name-of-var')
+
+```
+
 Add URL patterns
 
 ```python
@@ -70,18 +90,81 @@ urlpatterns = [
 ]
 ```
 
-Declaring Environment Variables in a .env file
+Run migrations to create the `PaystackCustomer, TransactionLog` models that comes with this package
 
 ```python
-# the below environment variables must be added to your .env file
+manage migrate
 
-PAYSTACK_PUBLIC_KEY=18be1670999999999999999
-PAYSTACK_PRIVATE_KEY=11d54fbd95a0100000000000000
-
+# The created models are automically registered and made available to you in the admin view
 ```
 
 ### Paying for an order
-If you like this repo, click the :star:
+While checkout process could be handled in different ways with Paystack, the general flow is this:
+* Payment is initialized from the frontend. Initializing a payment entails collecting the user details(email, name), and total amount and sending it to Paystack.
+* A response is then returned to the frontend. The response usually contains useful data like the _access code_, and the _redirect url_.
+* The frontend then charges the user's card
+* Once the card is charged and the process completed, paystack then returns the _transaction_reference_(a unique identifier for each transaction) to the frontend
+* The frontend could then use the _transaction_reference_ to verify(get the status) of the  transaction
+* In addition, Once the card is charged and the process completed, paystack then sends an event to a specified webhook url
+
+#### That's the general flow. Let's look at these specific ways...
+There are about four ways of handling checkouts with Paystack. This package has been designed to cater for the three most common approaches.
+Let's quickly go over the flow for each approach and how you could use this package to process an order in each scenario.
+
+##### Paystack Popup: with Paystack inline Javascript
+Here you'd import Paystack's inline Javascript using the _script_ tag. This will inturn insert the Paystack's pay button somewhere on your page. on lick of the pay button, the popup for collecting a customer's card details is loaded and shown to the user. (oversimplified sha).
+
+Follow the below steps to use this package to process an order in this scenario:
+* Do all the necessary frontend setup. The initialization of payment happens entirely on the frontend.
+* Once a card has been charged from the frontend. You could verify the transaction using the `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"` endpoint
+
+##### Redirect: redirecting to paystack page outside your website or mobile app
+No imports required here. A user is redirected to paystack where they make payment.
+
+Follow the below steps to use this package to process an order in this scenario:
+
+* Make a call to the ` POST /api/v1/paystack/transaction/initiate ` with the expected payload from the frontend to initialize a transaction
+* The endpoint then returns a response that contains the _redirect url_ and _access code_ to the frontend
+* The frontend then redirects the customer to the _redirect url_ returned in the reponse. The customer is charged there.
+* Make sure to add a CALL BACK URL on your paystack dashboard. Once the customer has been charged on the redirect page they'd be taken back to the CALL BACK URL you specify(usually a page on your site). When the users are taken back to the CALL BACK URL, the transaction reference for that transaction is appended to the URL. 
+* Once a card has been charged from the frontend. You could verify the transaction using the `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"` endpoint
+* Once the user is taken back to the CALL BACK URL on your site, You could then extract the _transaction reference_ appended to the URL and make a call to the  `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"` endpoint
+
+##### Paystack mobile SDKs
+No redirect here. It's the mobile version of the Paystack inline Javascript popup for web applications.
+
+Follow the below steps to use this package to process an order in this scenario:
+* Do all the necessary frontend setup. Essentially, you'd have to integrate some mobile SDK that allows users make payment within your mobile app without redirecting the user.
+* Make a call to the ` POST /api/v1/paystack/transaction/initiate ` with the expected payload from the frontend to initialize a transaction
+* The endpoint then returns a response that contains the _access code_ and _redirect url_ to the frontend
+* The frontend could then use the access code to charge a card within the app using the mobile SDK integrated. 
+* Once a card has been charged from the frontend using the mobile SDK a response is returned containing the transaction reference. You could then verify the transaction using the `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"` endpoint
+
+
+In all scenarios, make sure to specify the `your-domain + api/v1/paystack/webook-handler` endpoint as your WEBHOOOK URL on your Paystack dashboard. It is important that you do this because, eventhough we have an endpoint where you could verify and get the status of a transaction, it in the webhook that we are logging things like the transaction data as well as other things like the authorization_code that could be used to charge a customer that has already been charged in the past. See code snipet below:
+
+```python
+class WebhookService(object):
+    def __init__(self, request) -> None:
+        self.request = request
+
+    def webhook_handler(self):
+        secret = os.environ.get("PAYSTACK_SECRET_KEY")
+        webhook_data = self.request.data
+        hash = hmac.new(secret, webhook_data, digestmod=hashlib.sha512).hexdigest()
+
+        if hash != self.request.headers["x-paystack-signature"]:
+            raise ValidationError("MAC authentication failed")
+
+        if webhook_data["event"] == "charge.success":
+            paystack_service = TransactionService()
+            paystack_service.log_transaction(webhook_data["data"])
+
+            customer_service = CustomerService() # logs customer data like the auth_code here
+            customer_service.log_customer(webhook_data["data"])
+
+        return webhook_data
+```
 
 
 ## Oh okay, I gerrit. Thank you Nyior
