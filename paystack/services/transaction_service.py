@@ -42,6 +42,8 @@ class TransactionService(BaseAPIService):
             except KeyError:
                 raise ValidationError(f"{i} must be provided")
 
+        self.validate_amount(payload["amount"])
+
     def _validate_charge_payload(self, payload: dict) -> None:
         """
         check that payload has all the required params
@@ -53,6 +55,8 @@ class TransactionService(BaseAPIService):
                 payload[i]
             except KeyError:
                 raise ValidationError(f"{i} must be provided")
+
+        self.validate_amount(payload["amount"])
 
     def initialize_payment(self, payload: dict) -> Response:
         url = PAYSTACK_INITIALIZE_TRANSACTION_URL

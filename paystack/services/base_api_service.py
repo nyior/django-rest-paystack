@@ -43,13 +43,11 @@ class BaseAPIService(object):  # Not to be instantiated directly
         return result
 
     def validate_amount(self, amount):
-        if not amount:
-            raise ValidationError("Amount is required")
 
         if isinstance(amount, int) or isinstance(amount, float):
             if amount < 0:
                 raise ValidationError("Negative amount is not allowed")
-            return amount
+            return amount * 100 # in kobo
         else:
             raise ValidationError("Amount must be a number")
 

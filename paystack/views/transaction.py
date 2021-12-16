@@ -16,14 +16,23 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"])
     def initiate(self, request):
-        user_email = request.data.get("email")
-        amount = request.data.get("amount")
+        """
+            This is used to charge customers that had already been charged in
+            past.
+            Expects the payload in the format below:
 
-        payload = {
-            "email": user_email if user_email else None,
-            "amount": amount * 100 if amount else None,  # price in kobo
-            "metadata": {"user_id": request.user.id},
-        }
+            {
+                "email": "string",
+                "amount": float/int,
+                "metadata": dict/json, --Optional
+            }
+        """
+        payload = request.data
+
+        if "metadata" in payload:
+            payload["metadata"]["user_id"] = request.user.id
+        else:
+            payload["metadata"] = {"user_id": request.user.id}
 
         transaction_service = TransactionService()
         initiated_transaction = transaction_service.initialize_payment(payload)
@@ -41,16 +50,20 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"], url_path="charge-customer")
     def charge_customer(self, request):
-        user_email = request.data.get("email")
-        amount = request.data.get("amount")
-        authorization_code = request.data.get("authorization_code")
+        """
+            This is used to charge customers that had already been charged in
+            past.
+            Expects the payload in the format below:
 
-        payload = {
-            "email": user_email if user_email else None,
-            "amount": amount * 100 if amount else None,
-            "authorization_code": authorization_code if authorization_code else None,
-        }
+            {
+                "email": "string",
+                "amount": float/int,
+                "authorization_code": "string",
+            }
 
+        """
+        payload = request.data
+    
         transaction_service = TransactionService()
         charge = transaction_service.recurrent_charge(payload)
 
