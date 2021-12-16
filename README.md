@@ -90,6 +90,18 @@ urlpatterns = [
 ]
 ```
 
+Specify DEFAULT_AUTHENTICATION_CLASSES to be applied to the Paystack views(OPTIONAL)
+in your `settings.py`like so:
+
+```python
+# Note: Specifying this is optional, and when you don't, 
+# This package defaults to the TokenAuthentication class
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": "rest_framework.schemas.coreapi.AutoSchema"
+}
+```
+
 Run migrations to create the `PaystackCustomer, TransactionLog` models that comes with this package
 
 ```python
@@ -99,7 +111,7 @@ manage migrate
 ```
 
 ### Paying for an order
-While checkout process could be handled in different ways with Paystack, the general flow is this:
+While the checkout process could be handled in different ways with Paystack, the general flow is this:
 * Payment is initialized from the frontend. Initializing a payment entails collecting the user details(email, name), and total amount and sending it to Paystack.
 * A response is then returned to the frontend. The response usually contains useful data like the _access code_, and the _redirect url_.
 * The frontend then charges the user's card
@@ -112,7 +124,7 @@ There are about four ways of handling checkouts with Paystack. This package has 
 Let's quickly go over the flow for each approach and how you could use this package to process an order in each scenario.
 
 ##### Paystack Popup: with Paystack inline Javascript
-Here you'd import Paystack's inline Javascript using the _script_ tag. This will inturn insert the Paystack's pay button somewhere on your page. on lick of the pay button, the popup for collecting a customer's card details is loaded and shown to the user. (oversimplified sha).
+Here you'd import Paystack's inline Javascript using the _script_ tag. This will inturn insert the Paystack's pay button somewhere on your page. on click of the pay button, the popup for collecting a customer's card details is loaded and shown to the user. (oversimplified sha).
 
 Follow the below steps to use this package to process an order in this scenario:
 * Do all the necessary frontend setup. The initialization of payment happens entirely on the frontend.
@@ -127,8 +139,7 @@ Follow the below steps to use this package to process an order in this scenario:
 * The endpoint then returns a response that contains the _redirect url_ and _access code_ to the frontend
 * The frontend then redirects the customer to the _redirect url_ returned in the reponse. The customer is charged there.
 * Make sure to add a CALL BACK URL on your paystack dashboard. Once the customer has been charged on the redirect page they'd be taken back to the CALL BACK URL you specify(usually a page on your site). When the users are taken back to the CALL BACK URL, the transaction reference for that transaction is appended to the URL. 
-* Once a card has been charged from the frontend. You could verify the transaction using the `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"` endpoint
-* Once the user is taken back to the CALL BACK URL on your site, You could then extract the _transaction reference_ appended to the URL and make a call to the  `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"` endpoint
+* Once the user is taken back to the CALL BACK URL on your site, You could then extract the _transaction reference_ appended to the URL and make a call to the  `GET /api/v1/paystack/transaction/verify/?transaction_ref="ref"` endpoint to verify the transaction.
 
 ##### Paystack mobile SDKs
 No redirect here. It's the mobile version of the Paystack inline Javascript popup for web applications.
@@ -168,7 +179,32 @@ class WebhookService(object):
         return webhook_data
 ```
 
+**NOTE:** Always offer value in the Webook. For exaxmple, if you want to create an instance of an
+order for users after they've paid, it is advisable that you do that in the webhook. Paystack recommends that.
 
+Keeping in mind that you might want to perform some custom actions in the webhook that we can't possibly 
+predict, we made the webhook class extensible.
+
+### How can I extend the webhook class?
+If you wish to extend the webhook class, them here is how to:
+
+#### The WebhookFacadeView
+
+```python
+# First import the WebhookFacade
+from paystack.views import WebhookFacadeView
+
+
+# Then create your own view that extends the Facade
+class WebhookView(WebhookFacadeView):
+   
+    def post(self, request):
+        webhook_data = super().post(request)
+
+        # do whatever you want with the webhook data
+        # Then return a response to Paystack
+
+```
 ## Oh okay, I gerrit. Thank you Nyior
 You're welcome. If you like this repo, click the :star: I'd appreciate that.
 
