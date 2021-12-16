@@ -13,12 +13,10 @@ class BaseAPIService(object):  # Not to be instantiated directly
         return User.objects.get(id=user_id)
 
     def make_request(self, method, url, payload=None):
-        
+
         try:
-            PAYSTACK_PRIVATE_KEY = getattr(
-                settings, 'PAYSTACK_PRIVATE_KEY'
-            )
-        except Exception as e: # If ser hasn't declared variable
+            PAYSTACK_PRIVATE_KEY = getattr(settings, "PAYSTACK_PRIVATE_KEY")
+        except Exception as e:  # If ser hasn't declared variable
             raise ValidationError(e)
 
         headers = {

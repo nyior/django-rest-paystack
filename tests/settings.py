@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -112,8 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-PAYSTACK_PUBLIC_KEY=os.environ.get('PAYSTACK_PUBLIC_KEY')
-PAYSTACK_PRIVATE_KEY=os.environ.get('PAYSTACK_PRIVATE_KEY')
+PAYSTACK_PUBLIC_KEY = os.environ.get("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_PRIVATE_KEY = os.environ.get("PAYSTACK_PRIVATE_KEY")
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

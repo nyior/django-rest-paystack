@@ -2,7 +2,6 @@ import hashlib
 import hmac
 
 from django.conf import settings
-
 from rest_framework.exceptions import ValidationError
 
 from .customer_service import CustomerService
@@ -15,10 +14,8 @@ class WebhookService(object):
 
     def webhook_handler(self):
         try:
-            secret = getattr(
-                settings, 'PAYSTACK_PRIVATE_KEY'
-            )
-        except Exception as e: # If user hasn't declared variable
+            secret = getattr(settings, "PAYSTACK_PRIVATE_KEY")
+        except Exception as e:  # If user hasn't declared variable
             raise ValidationError(e)
 
         webhook_data = self.request.data
