@@ -1,6 +1,5 @@
 import hashlib
 import hmac
-import os
 
 from django.conf import settings
 
@@ -15,9 +14,13 @@ class WebhookService(object):
         self.request = request
 
     def webhook_handler(self):
-        secret = getattr(
-            settings, ' PAYSTACK_PRIVATE_KEY', None
-        )
+        try:
+            secret = getattr(
+                settings, 'PAYSTACK_PRIVATE_KEY'
+            )
+        except Exception as e: # If user hasn't declared variable
+            raise ValidationError(e)
+
         webhook_data = self.request.data
         hash = hmac.new(secret, webhook_data, digestmod=hashlib.sha512).hexdigest()
 

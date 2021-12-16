@@ -19,7 +19,7 @@ def user():
 def valid_transaction_payload(user):
     payload = {
         "email": user.email,
-        "amount": 30 * 100,
+        "amount": 30,
     }
 
     return payload
