@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.decorators import authentication_classes
 
 from paystack.models import PayStackCustomer
 from paystack.serializers import CustomerSerializer

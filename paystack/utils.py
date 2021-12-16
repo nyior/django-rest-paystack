@@ -21,3 +21,4 @@ def get_authentication_class():
 
     except KeyError:
         return (TokenAuthentication,)
+

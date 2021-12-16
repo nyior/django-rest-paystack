@@ -1,10 +1,13 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 
 from paystack.models import TransactionLog
 from paystack.serializers import PaymentSerializer
 from paystack.services import TransactionService
-from paystack.utils import get_authentication_class, return_okay_response
+from paystack.utils import (
+    get_authentication_class, 
+    return_okay_response
+)
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
