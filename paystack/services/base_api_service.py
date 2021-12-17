@@ -47,7 +47,7 @@ class BaseAPIService(object):  # Not to be instantiated directly
         if isinstance(amount, int) or isinstance(amount, float):
             if amount < 0:
                 raise ValidationError("Negative amount is not allowed")
-            return amount * 100 # in kobo
+            return amount * 100  # in kobo
         else:
             raise ValidationError("Amount must be a number")
 

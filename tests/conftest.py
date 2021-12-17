@@ -1,8 +1,7 @@
 import pytest
+from django.contrib.auth import get_user_model
 
 pytestmark = pytest.mark.django_db
-
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 

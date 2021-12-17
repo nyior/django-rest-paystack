@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
+# Run tests: python -m pytest tests
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -95,23 +95,6 @@ DATABASES = {
 
 REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema"}
 
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
 
 PAYSTACK_PUBLIC_KEY = os.environ.get("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_PRIVATE_KEY = os.environ.get("PAYSTACK_PRIVATE_KEY")

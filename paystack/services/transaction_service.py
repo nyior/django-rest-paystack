@@ -2,10 +2,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from paystack.models import TransactionLog
-from paystack.paystack_urls import (PAYSTACK_CHARGE_AUTHORIZATION_URL,
-                                    PAYSTACK_INITIALIZE_TRANSACTION_URL,
-                                    PAYSTACK_VERIFY_TRANSACTION_URL,
-                                    TRANSACTION_URL)
+from paystack.paystack_urls import (
+    PAYSTACK_CHARGE_AUTHORIZATION_URL,
+    PAYSTACK_INITIALIZE_TRANSACTION_URL,
+    PAYSTACK_VERIFY_TRANSACTION_URL,
+)
 
 from .base_api_service import BaseAPIService
 

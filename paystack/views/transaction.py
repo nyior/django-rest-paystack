@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 
 from paystack.models import TransactionLog
 from paystack.serializers import PaymentSerializer
@@ -17,15 +17,15 @@ class TransactionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["post"])
     def initiate(self, request):
         """
-            This is used to charge customers that had already been charged in
-            past.
-            Expects the payload in the format below:
+        This is used to charge customers that had already been charged in
+        past.
+        Expects the payload in the format below:
 
-            {
-                "email": "string",
-                "amount": float/int,
-                "metadata": dict/json, --Optional
-            }
+        {
+            "email": "string",
+            "amount": float/int,
+            "metadata": dict/json, --Optional
+        }
         """
         payload = request.data
 
@@ -51,19 +51,19 @@ class TransactionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["post"], url_path="charge-customer")
     def charge_customer(self, request):
         """
-            This is used to charge customers that had already been charged in
-            past.
-            Expects the payload in the format below:
+        This is used to charge customers that had already been charged in
+        past.
+        Expects the payload in the format below:
 
-            {
-                "email": "string",
-                "amount": float/int,
-                "authorization_code": "string",
-            }
+        {
+            "email": "string",
+            "amount": float/int,
+            "authorization_code": "string",
+        }
 
         """
         payload = request.data
-    
+
         transaction_service = TransactionService()
         charge = transaction_service.recurrent_charge(payload)
 

@@ -8,7 +8,8 @@ class WebhookFacadeView(APIView):
     """
     Exsits for extensibility reasons. Users might want to capture
     the data returned from Paystack and do some stuff with it.
-    E.g  retrieve the user tied to the payment(usually passed as a meta data in this package)
+    E.g  retrieve the user tied to the
+    payment(usually passed as a meta data in this package)
     and clear the user's cart or create an order for that user.
     """
 
