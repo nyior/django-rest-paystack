@@ -21,9 +21,6 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-lr6%h=1w*u_axr)+ec$++nn^=sc!vf7odcv8_mau&&=160)7wk"
 
@@ -85,13 +82,25 @@ WSGI_APPLICATION = "django_rest_paystack.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": str(os.path.join(BASE_DIR, "db.sqlite3")),
+if os.environ.get("ENV") == "local":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": str(os.path.join(BASE_DIR, "db.sqlite3")),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "CONN_MAX_AGE": 120,
+            "NAME": os.environ.get("DB_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASSWORD"),
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    }
 
 REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema"}
 

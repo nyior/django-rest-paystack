@@ -10,7 +10,8 @@ User = get_user_model()
 
 class BaseAPIService(object):  # Not to be instantiated directly
     def get_user(self, user_id):
-        return User.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
+        return user
 
     def make_request(self, method, url, payload=None):
 
