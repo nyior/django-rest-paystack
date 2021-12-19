@@ -1,15 +1,15 @@
-import pytest
+# import pytest
 
-from paystack.models import PayStackCustomer
-from paystack.services import CustomerService
-from tests.mock_data import webhook_data
+# from paystack.models import PayStackCustomer
+# from paystack.services import CustomerService
+# from tests.mock_data import webhook_data
 
-pytestmark = pytest.mark.django_db
+# pytestmark = pytest.mark.django_db
 
 
-class TestCustomerService(CustomerService):
-    @pytest.mark.django_db
-    def test_log_customer(self):
-        self.log_customer(webhook_data)
+# class TestCustomerService(CustomerService):
+#     @pytest.mark.django_db
+#     def test_log_customer(self):
+#         self.log_customer(webhook_data)
 
-        assert PayStackCustomer.objects.all().count() > 0
+#         assert PayStackCustomer.objects.all().count() > 0
