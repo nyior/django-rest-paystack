@@ -48,6 +48,5 @@ jobs:
       env:
         PAYSTACK_PUBLIC_KEY: ${{ secrets.PAYSTACK_PUBLIC_KEY }}
         PAYSTACK_PRIVATE_KEY: ${{ secrets.PAYSTACK_PRIVATE_KEY }}
-        DJANGO_SETTINGS_MODULE: tests.settings
       run: |
         python -m pytest tests
