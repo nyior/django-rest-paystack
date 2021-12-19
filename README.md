@@ -2,10 +2,9 @@
 	django-rest-paystack: a minimal SDK for integrating Paystack into your django-rest API backend.
 </h1>
 
-<p>
 ![Github-A Build Status](https://github.com//Nyior/django-rest-paystack/actions/workflows/lint_and_test.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/django-rest-paystack.svg)](https://badge.fury.io/py/django-rest-paystack)
-</p>
+
 
 <p>
     Focus on your business logic. Leave all the mundane payment _serere_ to us.
