@@ -1,5 +1,6 @@
 Django==2.2
 djangorestframework==3.12.4
+requests==2.26.0
 python-dotenv==0.19.2
 isort==5.10.1
 black==21.12b0
