@@ -1,13 +1,36 @@
-<h1>
+Metadata-Version: 2.1
+Name: django-rest-paystack
+Version: 2.1.1
+Summary: A minimal SDK for integrating Paystack into your django-rest API backend.
+Home-page: https://github.com/Nyior/django-rest-paystack
+Author: Nyior Clement
+Author-email: cnyior27@gmail.com
+License: MIT
+Project-URL: Bug Tracker, https://github.com/Nyior/django-rest-paystack/issues
+Project-URL: Source Code, https://github.com/Nyior/django-rest-paystack
+Keywords: django,rest,api,paystack,rest-framework,payment,initialize payment,verify payment,charge authorization,handle webhook
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.0
+Classifier: Framework :: Django :: 3.0
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Internet
+Classifier: Topic :: Internet :: WWW/HTTP
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown; charset=UTF-8
+License-File: LICENSE
+
+<h1 align="center">
 	django-rest-paystack: a minimal SDK for integrating Paystack into your django-rest API backend.
 </h1>
 
-<p>
-![Github-A Build Status](https://github.com//Nyior/django-rest-paystack/actions/workflows/lint_and_test.yml/badge.svg)
-[![PyPI version](https://badge.fury.io/py/django-rest-paystack.svg)](https://badge.fury.io/py/django-rest-paystack)
-</p>
-
-<p>
+<p align="center">
     Focus on your business logic. Leave all the mundane payment _serere_ to us.
     Our package will do all the heavy lifting for you :D
 </p>
@@ -18,7 +41,7 @@
 * [How do I use this package in my project?](#how-do-i-use-this-package-in-my-project)
 * [Paying for an order](#paying-for-an-order)
 * [How can I extend the webhook class?](#how-can-i-extend-the-webhook-class)
-* [Limitations](#todo)
+* [Limitations](#todo:)
 * [Contributing](#contributing)
 * [Acknowledgements](#acknowledgements)
 * [Wanna thank me? Just star this repo](#oh-okay-i-gerrit-thank-you-nyior)
@@ -236,13 +259,7 @@ You're welcome. If you like this repo, click the :star: I'd appreciate that.
 
 
 ## Contributing
-* Create an Issue for the feature/bug you'd like to work on. Or just pick an existing issue.
-* Setup project locally and write your code.
-* We use isort, black, and flake8 as one of the measures taken to ensure high code quality(We still need more of these measures sha). We use a precommit hook to run isort, black and flake8 each time we make a commit. We advice that you do thesame.
-* Each time you're done making your changes, run the test suite locally, and ensure they're all passing.
-* Also write tests for your new changes.
-* If all test are passing, you can then open a PR targeted on main.
-**Note:** A workflow will be executed on your PR. So if you don't follow the instructions above. The build will fail and your PR won't be reviewed. 
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Acknowledgements
 In building this, I found the following repositories really helpful
@@ -252,3 +269,5 @@ In building this, I found the following repositories really helpful
 
 ## License
 This project is released under the [MIT](https://choosealicense.com/licenses/mit/) License
+
+

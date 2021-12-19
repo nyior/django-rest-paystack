@@ -1,0 +1,9 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+django_rest_paystack.egg-info/PKG-INFO
+django_rest_paystack.egg-info/SOURCES.txt
+django_rest_paystack.egg-info/dependency_links.txt
+django_rest_paystack.egg-info/requires.txt
+django_rest_paystack.egg-info/top_level.txt
