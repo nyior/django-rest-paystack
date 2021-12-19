@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     # Third party packages
     "rest_framework",
     "rest_framework.authtoken",
-    "rest_framework_swagger",
-    "paystack",
 ]
 
 MIDDLEWARE = [
