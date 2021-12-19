@@ -48,5 +48,8 @@ jobs:
       env:
         PAYSTACK_PUBLIC_KEY: ${{ secrets.PAYSTACK_PUBLIC_KEY }}
         PAYSTACK_PRIVATE_KEY: ${{ secrets.PAYSTACK_PRIVATE_KEY }}
+        POSTGRES_USER: ${{ postgres.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ postgres.POSTGRES_PASSWORD }}
+        POSTGRES_DB: ${{ postgres.POSTGRES_DB }}
       run: |
         python -m pytest tests
