@@ -88,6 +88,18 @@ if os.environ.get("ENV") == "local":
             "NAME": str(os.path.join(BASE_DIR, "db.sqlite3")),
         }
     }
+elif os.environ.get("GITHUB_ACTIONS"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "CONN_MAX_AGE": 120,
+            "NAME": "paystack",
+            "USER": "postgres",
+            "PASSWORD": "postgres",
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    }
 else:
     DATABASES = {
         "default": {
