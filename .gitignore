@@ -22,3 +22,4 @@ venv.bak/
 .pytest_cache
 
 dist
+django_rest_paystack.egg-info
