@@ -19,5 +19,5 @@ def get_authentication_class():
     try:
         return getattr(settings, "REST_FRAMEWORK")["DEFAULT_AUTHENTICATION_CLASSES"]
 
-    except KeyError:
+    except Exception:
         return (TokenAuthentication,)
