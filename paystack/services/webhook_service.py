@@ -18,8 +18,12 @@ class WebhookService(object):
         except Exception as e:  # If user hasn't declared variable
             raise ValidationError(e)
 
-        webhook_data = self.request.data
-        hash = hmac.new(secret, webhook_data, digestmod=hashlib.sha512).hexdigest()
+        # Use self.request.body instead of self.request.data ==> according to Paystack docs.
+        # DRF request.data is a bit different from the default request.body
+        webhook_data = self.request.body
+
+        # using the secret key without encoding throws an error.
+        hash = hmac.new(secret.encode('utf-8'), webhook_data, digestmod=hashlib.sha512).hexdigest()
 
         if hash != self.request.headers["x-paystack-signature"]:
             raise ValidationError("MAC authentication failed")
